@@ -7,7 +7,7 @@ object TestagleBuild extends Build {
 	val finaglecore = "com.twitter" %% "finagle-core" % "6.8.1"
   val scalabuf = "net.sandrogrzicic" %% "scalabuff-runtime" % "1.3.6"
 
-  lazy val root = Project(id = "testagle", base = file("."), settings = Defaults.defaultSettings ++ scalabuffSettings) configs(ScalaBuff) aggregate (core, api)
+  lazy val root = Project(id = "testagle", base = file("."), settings = Defaults.defaultSettings ++ scalabuffSettings) configs(ScalaBuff) aggregate (core, api) dependsOn (core, api)
 
   lazy val core = Project(id = "testagle-core", base = file("testagle-core")) settings(libraryDependencies ++= Seq(finaglecore, scalabuf), exportJars := true) dependsOn api
 
