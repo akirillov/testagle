@@ -5,7 +5,7 @@ package io.testagle.core;
 option java_package = "io.testagle.core";
 option java_outer_classname = "TestagleProto";
 
-message RPCProtocol{
+message TestagleProtocol{
 
     enum MessageType {
       LOAD_DESCRIPTION = 0;
@@ -28,7 +28,7 @@ message RPCProtocol{
         required bytes data = 4;
     }
 
-    message LoadTestStats {
+    message LoadStats {
       required string nodeName = 1;
       required int64 completedRequests = 2;
       required int32 totalRequests = 3;
@@ -36,7 +36,7 @@ message RPCProtocol{
       required float minLatency = 5;
       required float avgLatency = 6;
       required float meanLatency = 7;
-      required float 95Latency = 8;
+      required float latency95 = 8;
       repeated ResponseStatus responses = 9;
     }
 
