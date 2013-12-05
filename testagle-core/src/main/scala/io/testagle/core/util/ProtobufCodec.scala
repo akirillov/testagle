@@ -4,10 +4,7 @@ package io.testagle.util
 import com.twitter.finagle.{Codec, CodecFactory}
 import org.jboss.netty.handler.codec.protobuf.{ProtobufEncoder, ProtobufDecoder, ProtobufVarint32FrameDecoder, ProtobufVarint32LengthFieldPrepender}
 import org.jboss.netty.channel.{Channels, ChannelPipelineFactory}
-import net.sandrogrzicic.scalabuff.Message
 import io.testagle.core.TestagleProtocol
-
-//import com.google.protobuf.Message
 
 /**
  * TODO: document this ASAP!!!
