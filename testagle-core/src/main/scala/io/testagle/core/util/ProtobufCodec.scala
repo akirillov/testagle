@@ -1,10 +1,10 @@
 package io.testagle.util
 
 
-import com.google.protobuf.Message
 import com.twitter.finagle.{Codec, CodecFactory}
 import org.jboss.netty.handler.codec.protobuf.{ProtobufEncoder, ProtobufDecoder, ProtobufVarint32FrameDecoder, ProtobufVarint32LengthFieldPrepender}
 import org.jboss.netty.channel.{Channels, ChannelPipelineFactory}
+import net.sandrogrzicic.scalabuff.Message
 
 /**
  * TODO: document this ASAP!!!
@@ -22,7 +22,7 @@ class ProtobufCodec(val clientPrototype: Message, val serverPrototype: Message) 
 
           pipeline.addLast("messageEncoder",  new ProtobufVarint32LengthFieldPrepender())
           pipeline.addLast("messageDecoder", new ProtobufVarint32FrameDecoder())
-          pipeline.addLast("decoder", new ProtobufDecoder(serverPrototype))
+          pipeline.addLast("decoder", new ProtobufDecoder(serverPrototype.getDefaultInstanceForType))
           pipeline.addLast("encoder", new ProtobufEncoder())
 
           pipeline
@@ -40,7 +40,7 @@ class ProtobufCodec(val clientPrototype: Message, val serverPrototype: Message) 
           pipeline.addLast("messageDecoder", new ProtobufVarint32FrameDecoder())
           pipeline.addLast("messageEncoder",  new ProtobufVarint32LengthFieldPrepender())
           pipeline.addLast("encoder", new ProtobufEncoder())
-          pipeline.addLast("decoder", new ProtobufDecoder(clientPrototype))
+          pipeline.addLast("decoder", new ProtobufDecoder(clientPrototype.getDefaultInstanceForType))
 
           pipeline
         }
