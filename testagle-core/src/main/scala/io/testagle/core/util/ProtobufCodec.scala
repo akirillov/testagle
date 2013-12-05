@@ -5,17 +5,20 @@ import com.twitter.finagle.{Codec, CodecFactory}
 import org.jboss.netty.handler.codec.protobuf.{ProtobufEncoder, ProtobufDecoder, ProtobufVarint32FrameDecoder, ProtobufVarint32LengthFieldPrepender}
 import org.jboss.netty.channel.{Channels, ChannelPipelineFactory}
 import net.sandrogrzicic.scalabuff.Message
+import io.testagle.core.TestagleProtocol
+
+//import com.google.protobuf.Message
 
 /**
  * TODO: document this ASAP!!!
  */
-class ProtobufCodec(val clientPrototype: Message, val serverPrototype: Message) extends CodecFactory[Message, Message] {
+class ProtobufCodec(val clientPrototype: TestagleProtocol, val serverPrototype: TestagleProtocol) extends CodecFactory[TestagleProtocol, TestagleProtocol] {
 
   val lengthPrepender = new ProtobufVarint32LengthFieldPrepender()
   val frameDecoder = new ProtobufVarint32FrameDecoder()
 
   def server = Function.const {
-    new Codec[Message, Message] {
+    new Codec[TestagleProtocol, TestagleProtocol] {
       def pipelineFactory = new ChannelPipelineFactory {
         def getPipeline = {
           val pipeline = Channels.pipeline()
@@ -32,7 +35,7 @@ class ProtobufCodec(val clientPrototype: Message, val serverPrototype: Message) 
   }
 
   def client = Function.const {
-    new Codec[Message,Message] {
+    new Codec[TestagleProtocol,TestagleProtocol] {
       def pipelineFactory = new ChannelPipelineFactory {
         def getPipeline = {
           val pipeline = Channels.pipeline()
@@ -44,22 +47,14 @@ class ProtobufCodec(val clientPrototype: Message, val serverPrototype: Message) 
 
           pipeline
         }
-
       }
     }
   }
-
-
 }
 
 object  ProtobufCodec{
   /**
-   * Passing two prototypes for case when server accepts some kind of requests and client another kind of responses
-   */
-  def apply(clientPrototype: Message, serverPrototype: Message) = new ProtobufCodec(clientPrototype, serverPrototype)
-
-  /**
    * When client and server share common protocol
    */
-  def apply(prototype: Message) = new ProtobufCodec(prototype, prototype)
+  def apply(prototype: TestagleProtocol) = new ProtobufCodec(prototype, prototype)
 }
