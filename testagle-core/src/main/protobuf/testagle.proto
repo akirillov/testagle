@@ -26,6 +26,7 @@ message TestagleProtocol{
         required int32 concurrency = 2;
         required int32 totalRequests = 3;
         required bytes data = 4;
+        required string testClass = 5;
     }
 
     message LoadStats {

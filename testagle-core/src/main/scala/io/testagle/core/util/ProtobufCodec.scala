@@ -6,9 +6,6 @@ import org.jboss.netty.handler.codec.protobuf.{ProtobufEncoder, ProtobufDecoder,
 import org.jboss.netty.channel.{Channels, ChannelPipelineFactory}
 import io.testagle.core.TestagleProtocol
 
-/**
- * TODO: document this ASAP!!!
- */
 class ProtobufCodec(val clientPrototype: TestagleProtocol, val serverPrototype: TestagleProtocol) extends CodecFactory[TestagleProtocol, TestagleProtocol] {
 
   val lengthPrepender = new ProtobufVarint32LengthFieldPrepender()

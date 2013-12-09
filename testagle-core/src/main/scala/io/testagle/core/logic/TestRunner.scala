@@ -2,30 +2,28 @@ package io.testagle.core.logic
 
 import io.testagle.api.LoadTest
 import io.testagle.core.TestagleProtocol.LoadDescription
+import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Class that runs provided tests
- *
+ * Class that loads provided tests and runs 'em
  */
-class TestRunner { //TODO: provide scaldi wiring
+class TestRunner extends TestAPI{
 
-  private def getLoadTest( jar: Array[Byte]): LoadTest = {
-    //http://stackoverflow.com/questions/8867766/scala-dynamic-object-class-loading
+  private val tests = new ConcurrentHashMap[String, LoadTest]()
 
-
-    //TODO: actually there are a lot of ways to dynamically load jar in runtime
-    //some things to keep in mind:
-    // 1) jar will be a large one - with all its dependencies (like protobuf generated code) and so on
-    // 2) provide class name in message vs. full scan of jar's interface implementations
-    null
-  }
+  private def getLoadTest( jar: Array[Byte], className: String) = new TestLoader().uploadTestJarFromBytes(jar, className)
 
   def initTest(testData: LoadDescription) = {
-    getLoadTest(testData.`data`.toByteArray)
+    getLoadTest(testData.`data`.toByteArray, testData.`testClass`)
   }
 
-  def runTest(testID: LoadTest) = {
+  def runTest(testID: String) = {
 
   }
 
+  def loadTest(name: String, testImpl: LoadTest) = ???
+
+  def unloadTest(name: String) = ???
+
+  def getTest(name: String) = ???
 }
