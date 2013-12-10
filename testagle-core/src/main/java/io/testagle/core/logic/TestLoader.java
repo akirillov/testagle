@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 public class TestLoader {
     public LoadTest uploadTestJarFromBytes(byte[] jarBytes, String className) throws ClassNotFoundException, IOException {
 
-        URI uri = writeFile(jarBytes);
+        URI uri = writeFile(jarBytes, "/tmp/test"+System.nanoTime()+".jar");
 
         ClassLoader loader = null;
 
@@ -47,10 +47,6 @@ public class TestLoader {
         }
 
         return testInstance;
-    }
-
-    public URI writeFile(byte[] bytes) throws IOException {
-        return writeFile(bytes, "/tmp/test.jar");
     }
 
     public URI writeFile(byte[] bytes, String path) throws IOException {

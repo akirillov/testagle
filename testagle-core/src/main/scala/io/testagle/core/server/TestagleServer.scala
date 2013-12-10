@@ -1,11 +1,11 @@
-package io.testagle.server
+package io.testagle.core.server
 
 /**
  *
  * TODO: document this ASAP!!!
  *
  */
-class ServerRunner extends App{
+object TestagleServer extends App{
   override def main(args: Array[String]) {
     println("dispatching server started")
   }

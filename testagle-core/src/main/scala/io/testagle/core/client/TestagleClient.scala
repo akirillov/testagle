@@ -1,11 +1,11 @@
-package io.testagle.client
+package io.testagle.core.client
 
 /**
  *
  * TODO: document this ASAP!!!
  *
  */
-class NodeRunner extends App{
+class TestagleClient extends App{
   override def main(args: Array[String]) {
     println("firing node ready")
   }

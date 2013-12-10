@@ -1,6 +1,7 @@
 import sbt._
 import Keys._
 import scalabuff.ScalaBuffPlugin._
+import xerial.sbt.Pack._
 
 object TestagleBuild extends Build {
 
@@ -12,9 +13,18 @@ object TestagleBuild extends Build {
 
   lazy val root = Project(id = "testagle", base = file(".")) aggregate (core, api, example) dependsOn (core, api, example)
 
-  lazy val core = Project(id = "testagle-core", base = file("testagle-core"), settings = Defaults.defaultSettings ++ scalabuffSettings)
-  .configs(ScalaBuff).settings(libraryDependencies ++= Seq(finaglecore, specs2), exportJars := true)
-  .dependsOn(api, uri("git://github.com/sbt/sbt-assembly.git#3e6dfa2"))
+  lazy val core = Project(
+    id = "testagle-core",
+    base = file("testagle-core"),
+    settings = Defaults.defaultSettings
+      ++ scalabuffSettings
+      ++ packSettings
+      ++ Seq(
+      packMain := Map("startNode" -> "io.testagle.core.server.TestagleServer"),
+      libraryDependencies ++= Seq(finaglecore, specs2),
+      exportJars := true
+    )
+  ).configs(ScalaBuff).dependsOn(api)
 
   lazy val api = Project(id = "testagle-api", base = file("testagle-api")) settings (exportJars := true)
 

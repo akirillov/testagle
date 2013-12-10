@@ -20,11 +20,10 @@ class TestLoaderSpec extends Specification {
 
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
 
-      val uri = loader.writeFile(byteArray, "io.testagle.example.SampleHttpTest")
+      val uri = loader.writeFile(byteArray, "/tmp/testJar.jar")
 
       uri mustNotEqual null
-      uri.toString.endsWith("io.testagle.example.SampleHttpTest") mustEqual true
-
+      uri.toString.endsWith("/tmp/testJar.jar") mustEqual true
     }
   }
   "load and return new instance of LoadTest implementation" in {
@@ -36,6 +35,7 @@ class TestLoaderSpec extends Specification {
     println(testClass)
 
     testClass mustNotEqual null
+    testClass.toString().contains("SampleHttpTest") mustEqual true
 
   }
 }
