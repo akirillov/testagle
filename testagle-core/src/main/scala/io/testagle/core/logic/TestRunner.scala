@@ -3,11 +3,12 @@ package io.testagle.core.logic
 import io.testagle.api.LoadTest
 import io.testagle.core.TestagleProtocol.LoadDescription
 import java.util.concurrent.ConcurrentHashMap
+import io.testagle.core.TestagleAPI
 
 /**
  * Class that loads provided tests and runs 'em
  */
-class TestRunner extends TestAPI{
+class TestRunner extends TestagleAPI{
 
   private val tests = new ConcurrentHashMap[String, LoadTest]()
 
@@ -21,7 +22,7 @@ class TestRunner extends TestAPI{
 
   }
 
-  def loadTest(name: String, testImpl: LoadTest) = ???
+  def loadTest(container: LoadDescription) = ???
 
   def unloadTest(name: String) = ???
 

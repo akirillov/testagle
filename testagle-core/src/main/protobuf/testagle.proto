@@ -10,15 +10,19 @@ message TestagleProtocol{
     enum MessageType {
       LOAD_DESCRIPTION = 0;
       LOAD_STATS = 1;
-      OK = 2;
-      ERROR = 3;
+      UNLOAD_COMMAND = 2;
+      RUNTEST_COMMAND = 3;
+      OK = 4;
+      ERROR = 5;
     }
 
     required MessageType type = 1;
     optional LoadDescription loadDescription = 2;
     optional LoadStats loadStats = 3;
-    optional Ok ok = 4;
-    optional Error error = 5;
+    optional Unload unload = 4;
+    optional RunTest runTest = 5;
+    optional Ok ok = 6;
+    optional Error error = 7;
 
 
     message LoadDescription {
@@ -46,8 +50,16 @@ message TestagleProtocol{
       required float duration = 2;
     }
 
+    message Unload {
+        required string testID = 1;
+    }
+
+    message RunTest {
+        required string testID = 1;
+    }
+
     message Ok {
-      required string text = 1;
+      required string testID = 1;
     }
 
     message Error {

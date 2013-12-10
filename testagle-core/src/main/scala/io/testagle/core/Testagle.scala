@@ -4,6 +4,7 @@ import java.net.{InetSocketAddress, SocketAddress}
 import com.twitter.finagle.Service
 import com.twitter.util.Future
 import io.testagle.core.TestagleProtocol._
+import io.testagle.core.TestagleProtocol.MessageType._
 import java.lang.String
 import com.twitter.finagle.builder.{Server, ClientBuilder, ServerBuilder}
 import io.testagle.util.ProtobufCodec
@@ -16,11 +17,11 @@ class Testagle extends Service[TestagleProtocol, TestagleProtocol] {
     request match {
       case p: TestagleProtocol =>
         p.`type` match {
-          case MessageType.LOAD_DESCRIPTION => {
+          case LOAD_DESCRIPTION => {
             val loadDescription = p.`loadDescription`.get
-            Future.value(TestagleProtocol(MessageType.LOAD_DESCRIPTION, None, None, Option(Ok("Everything OK")), None))  //TODO: provide proper handler
+            Future.value(TestagleProtocol(OK, None, None, None, None, Some(Ok("testID"))))
           }
-          case _ => Future.value(TestagleProtocol(MessageType.LOAD_DESCRIPTION, None, None, None, Option(Error("Unappropriate message provided!"))))
+          case _ => Future.value(TestagleProtocol(ERROR, None, None, None, None, None, Some(Error("Unappropriate message provided!"))))
         }
     }
   }
@@ -29,7 +30,7 @@ class Testagle extends Service[TestagleProtocol, TestagleProtocol] {
 /**
  * Builder object for Testing Node (node that runs tests)
  */
-object TestNode{
+object TestagleServer{
   val codec = ProtobufCodec(TestagleProtocol.getDefaultInstance)
 
   def apply(port: Int, name: String) = {
@@ -48,7 +49,7 @@ object TestNode{
 /**
  * Builder object for Testing Server - central component that dispatches load tests to the clients
  */
-object TestServer{
+object TestagleClient{
   val codec = ProtobufCodec(TestagleProtocol.getDefaultInstance)
 
   def apply(addresses: List[InetSocketAddress]): Service[TestagleProtocol, TestagleProtocol] =

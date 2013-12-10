@@ -20,7 +20,7 @@ object TestagleBuild extends Build {
       ++ scalabuffSettings
       ++ packSettings
       ++ Seq(
-      packMain := Map("startNode" -> "io.testagle.core.server.TestagleServer"),
+      packMain := Map("startNode" -> "io.testagle.core.server.TestagleServerRunner"),
       libraryDependencies ++= Seq(finaglecore, specs2),
       exportJars := true
     )
