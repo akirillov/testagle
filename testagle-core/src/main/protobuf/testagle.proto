@@ -35,19 +35,13 @@ message TestagleProtocol{
 
     message LoadStats {
       required string nodeName = 1;
-      required int64 completedRequests = 2;
+      required int32 completedRequests = 2;
       required int32 totalRequests = 3;
       required int32 errors = 4;
       required float minLatency = 5;
       required float avgLatency = 6;
       required float meanLatency = 7;
       required float latency95 = 8;
-      repeated ResponseStatus responses = 9;
-    }
-
-    message ResponseStatus {
-      required string response = 1;
-      required float duration = 2;
     }
 
     message Unload {

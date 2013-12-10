@@ -11,4 +11,9 @@ trait LoadTest {
 
   def execute()
 
+  /*/**
+   * Implementation should contain warm up activities such as connection pool allocation and initialization
+   */
+  def warmup()
+*/
 }

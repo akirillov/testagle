@@ -11,7 +11,5 @@ trait TestagleAPI {
 
   def unloadTest(testId: String)
 
-  def getTest(name: String)  //TODO: removal candidate
-
   def runTest(testId: String)
 }
