@@ -5,7 +5,7 @@ case class TotalStats(completed: Int, total: Int, inError: Int, minLatency: Floa
 
 object StatsAggregator{
   def aggregate(stats: List[RequestStats]): TotalStats = {
-
+     TotalStats(0,0,0,0f,0f,0f,0f)      //TODO: remove
   }
 }
 

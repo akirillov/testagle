@@ -1,4 +1,4 @@
-package io.testagle.example.test
+package io.testagle.example
 
 import io.testagle.api.LoadTest
 import org.jboss.netty.handler.codec.http._

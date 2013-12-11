@@ -6,8 +6,9 @@ import java.util.concurrent.ConcurrentHashMap
 import io.testagle.core.{TestagleProtocol, TestagleAPI}
 import io.testagle.core.TestagleProtocol.MessageType._
 import java.util.{UUID}
-import io.testagle.core.stats.TotalStats
-import com.twitter.util.Future
+import io.testagle.core.stats.{RequestStats, TotalStats}
+import scala.concurrent._
+import ExecutionContext.Implicits.global
 
 /**
  * Class that loads provided tests and runs 'em
@@ -20,37 +21,20 @@ class TestagleAPIServerImplementation extends TestagleAPI{
 
   private def getLoadTest( jar: Array[Byte], className: String) = new TestLoader().uploadTestJarFromBytes(jar, className)
 
-  implicit def Stats2Protobuf(value : TotalStats) = TestagleProtocol(LOAD_STATS, None, Some(LoadStats(value.)))
+  //implicit def Stats2Protobuf(value : TotalStats) = TestagleProtocol(LOAD_STATS, None, Some(LoadStats(value.)))
 
   def runTest(testId: String) = {
     if(!tests.contains(testId)) generateError("No test with such ID!")
 
     val loadDescriptor = tests.get(testId)
 
-    val testJobs = (1 to loadDescriptor.concurrency).map(_ => new TestJob())
+    val executors: Seq[TestExecutor] = (1 to loadDescriptor.concurrency).map(_ => new TestExecutor())
 
-    val allTheSquares: Future[List[Int]] = scala.concurrent.Future.traverse(numberList)
-
-
-
-
-    val future1 = Future(timeTakingIdentityFunction(1))
-    val future2 = Future(timeTakingIdentityFunction(2))
-    val future3 = Future(timeTakingIdentityFunction(3))
-
-    val future = for {
-      x <- future1
-      y <- future2
-      z <- future3
-    } yield (x + y + z)
-
-    future onSuccess {
-      case sum =>
-        val elapsedTime = ((System.currentTimeMillis - startTime) / 1000.0)
-        println("Sum of 1, 2 and 3 is " + sum + " calculated in " + elapsedTime + " seconds")
+    val results = future {
+      executors.map(t => t.executeMultipleTests(loadDescriptor.test, loadDescriptor.totalRequests/loadDescriptor.concurrency))
     }
 
-//    1 to loadDescriptor.concurrency
+
 
     //TODO : parallel execution will be implemented in feature branch
   }
@@ -71,9 +55,9 @@ class TestagleAPIServerImplementation extends TestagleAPI{
     }
   }
 
-  def generateError(msg: String) = TestagleProtocol(ERROR, None, None, None, None, None, Some(Error(msg)))
+  private def generateError(msg: String) = TestagleProtocol(ERROR, None, None, None, None, None, Some(Error(msg)))
 
-  def generateOk(msg: String) = TestagleProtocol(OK, None, None, None, None, Some(Ok(msg)))
+  private def generateOk(msg: String) = TestagleProtocol(OK, None, None, None, None, Some(Ok(msg)))
 }
 
 

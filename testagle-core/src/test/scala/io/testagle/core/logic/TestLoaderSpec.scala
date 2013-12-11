@@ -1,17 +1,10 @@
 package io.testagle.core.logic
 
+import io.testagle.core.TestHelpers._
 import org.specs2.mutable.Specification
 
+
 class TestLoaderSpec extends Specification {
-
-  def readBytesFromClasspathResource(filename: String) = {
-    val source = scala.io.Source.fromURL(getClass.getResource("/testagle-example.jar"))(scala.io.Codec.ISO8859)
-    val byteArray = source.map(_.toByte).toArray
-
-    source.close()
-
-    byteArray
-  }
 
   "Test Loader" should {
 
