@@ -6,9 +6,9 @@ import scala.concurrent._
 import ExecutionContext.Implicits.global
 
 class TestExecutor {
-  
-  private def executeTest(test: LoadTest): Future[RequestStats] = {
-    future {
+
+  //sequential for now
+  private def executeTest(test: LoadTest): RequestStats = {
       val s = System.currentTimeMillis
       try{
         test.execute()
@@ -16,10 +16,9 @@ class TestExecutor {
       } catch {
         case t: Throwable => RequestStats(System.currentTimeMillis - s, inError = true)
       }
-    }
   }
 
-  def executeMultipleTests(test: LoadTest, amount: Int): Future[List[Future[RequestStats]]] = {
+  def executeMultipleTests(test: LoadTest, amount: Int): Future[List[RequestStats]] = {
     future{
       (1 to amount).map(_ => executeTest(test)).toList
     }

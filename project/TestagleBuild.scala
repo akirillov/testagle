@@ -14,7 +14,7 @@ object TestagleBuild extends Build {
   lazy val root = Project(id = "testagle", base = file(".")) aggregate (core, api, example) dependsOn (core, api, example)
 
   lazy val core = Project(
-    id = "testagle-core",
+    id = "core",
     base = file("testagle-core"),
     settings = Defaults.defaultSettings
       ++ scalabuffSettings
@@ -26,8 +26,8 @@ object TestagleBuild extends Build {
     )
   ).configs(ScalaBuff).dependsOn(api)
 
-  lazy val api = Project(id = "testagle-api", base = file("testagle-api")) settings (exportJars := true)
+  lazy val api = Project(id = "api", base = file("testagle-api")) settings (exportJars := true)
 
-  lazy val example = Project(id = "testagle-example", base = file("testagle-example")) settings (libraryDependencies ++= Seq(finaglecore, finaglehttp), exportJars := true) dependsOn api
+  lazy val example = Project(id = "example", base = file("testagle-example")) settings (libraryDependencies ++= Seq(finaglecore, finaglehttp), exportJars := true) dependsOn api
 }
 

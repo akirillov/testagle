@@ -23,12 +23,12 @@ class TestLoaderSpec extends Specification {
     val loader = new TestLoader
     val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
 
-    val testClass = loader.uploadTestJarFromBytes(byteArray, "io.testagle.example.SampleHttpTest")
+    val testClass = loader.uploadTestJarFromBytes(byteArray, "io.testagle.example.TestagleTest")
 
     println(testClass)
 
     testClass mustNotEqual null
-    testClass.toString().contains("SampleHttpTest") mustEqual true
+    testClass.toString().contains("TestagleTest") mustEqual true
 
   }
 }

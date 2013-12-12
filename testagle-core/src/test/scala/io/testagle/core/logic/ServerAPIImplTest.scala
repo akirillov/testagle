@@ -8,30 +8,49 @@ import com.google.protobuf.ByteString
 class ServerAPIImplTest extends Specification{
 
   "Server API Implementation" should {
-
-    "load test and generate UUID" in {
+    "upload test and generate UUID" in {
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.test.SampleHttpTest")
+      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest")
 
-      val resp = new TestagleAPIServerImplementation().loadTest(msg).asInstanceOf[Ok]
+      val testID = new TestagleAPIServerImplementation().loadTest(msg)
 
-      println(resp)
-
-      resp mustNotEqual null
-      resp.`testID`.isEmpty mustEqual false
+      testID must_!= null
+      testID.length must_!= 0
     }
-    "load load test and remove it by UUID" in {
+    "remove test by UUID" in {
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.test.SampleHttpTest")
+      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest")
 
       val server = new TestagleAPIServerImplementation()
 
-      val resp = server.loadTest(msg).asInstanceOf[Ok]
+      val testID = server.loadTest(msg)
 
-      val id = resp.`testID`
-      id.isEmpty mustEqual false
+      server.unloadTest(testID) mustEqual testID
+      server.unloadTest(testID) mustEqual null
+    }
+  }
 
-      server.unloadTest(id) mustEqual id
+  "Server API Implementation" should {
+    "run specified test at specified concurrency" in {
+      val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
+      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest")
+
+      val server = new TestagleAPIServerImplementation()
+
+      val testID = server.loadTest(msg)
+
+      val testResult = server.runTest(testID)
+
+      println(testResult)
+
+
+      testID must_!= null
+      testID.length must_!= 0
+
+      server.unloadTest(testID) mustEqual testID
+      server.unloadTest(testID) mustEqual null
+
+
     }
   }
 }
