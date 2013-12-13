@@ -24,12 +24,9 @@ class TestagleAPIServerImplementation extends TestagleAPI{
   def runTest(testId: String) = {
     if( ! tests.containsKey(testId) ) { throw new RuntimeException("No test with such ID!") }
 
-    tests.contains("AFTER THROW()")
-
     val loadDescriptor = tests.get(testId)
 
     val executors: Seq[TestExecutor] = (1 to loadDescriptor.concurrency).map(_ => new TestExecutor())
-
 
     //TODO: implementation really sucks in idiomatic sense but it parallels good across the cores
     val results: Seq[Future[List[RequestStats]]] = executors.map(t => t.executeMultipleTests(loadDescriptor.test, loadDescriptor.totalRequests/loadDescriptor.concurrency))
@@ -62,10 +59,6 @@ class TestagleAPIServerImplementation extends TestagleAPI{
       case null => null
     }
   }
-
-  //  private def generateError(msg: String) = TestagleProtocol(ERROR, None, None, None, None, None, Some(Error(msg)))
-
-  //  private def generateOk(msg: String) = TestagleProtocol(OK, None, None, None, None, Some(Ok(msg)))
 }
 
 

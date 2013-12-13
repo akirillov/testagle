@@ -8,21 +8,42 @@ import io.testagle.core.TestagleProtocol.MessageType._
 import java.lang.String
 import com.twitter.finagle.builder.{Server, ClientBuilder, ServerBuilder}
 import io.testagle.util.ProtobufCodec
+import scala.Predef
+import io.testagle.core.logic.TestagleAPIServerImplementation
+import io.testagle.core.stats.TotalStats
 
 /**
  * Core Service stereotype for dispatching load
  */
 class Testagle extends Service[TestagleProtocol, TestagleProtocol] {
+
+  val core: TestagleAPI = new TestagleAPIServerImplementation
+
+  /*
+  required string nodeName = 1;
+     required int32 completedRequests = 2;
+     required int32 totalRequests = 3;
+     required int32 errors = 4;
+     required float minLatency = 5;
+     required float avgLatency = 6;
+     required float meanLatency = 7;
+     required float latency95 = 8;
+ */
+  implicit def toLoadStats(stats: TotalStats) = LoadStats("NODE NAME", stats.completed, stats.total, stats.inError, stats.minLatency, stats.avgLatency, stats.meanLatency, stats.latency95)
+
   def apply(request: TestagleProtocol) = {
+    try{
     request match {
       case p: TestagleProtocol =>
         p.`type` match {
-          case LOAD_DESCRIPTION => {
-            val loadDescription = p.`loadDescription`.get
-            Future.value(TestagleProtocol(OK, None, None, None, None, Some(Ok("testID"))))
-          }
+          case LOAD_DESCRIPTION => Future.value(TestagleProtocol(OK, None, None, None, None, Some(Ok(core.loadTest(p.`loadDescription`.get)))))
+          case UNLOAD_COMMAND => Future.value(TestagleProtocol(OK, None, None, None, None, Some(Ok(core.unloadTest(p.`unload`.get.`testID`)))))
+          case RUNTEST_COMMAND => Future.value(TestagleProtocol(LOAD_STATS, None, Some(core.runTest(p.`runTest`.get.`testID`)), None, None, None))
           case _ => Future.value(TestagleProtocol(ERROR, None, None, None, None, None, Some(Error("Unappropriate message provided!"))))
         }
+    }
+    } catch {
+      case t: Throwable => Future.value(TestagleProtocol(ERROR, None, None, None, None, None, Some(Error(t.getMessage))))
     }
   }
 }
@@ -47,7 +68,7 @@ object TestagleServer{
 }
 
 /**
- * Builder object for Testing Server - central component that dispatches load tests to the clients
+ * Builder object for Testing Server - central component that dispatches load tests to the nodes
  */
 object TestagleClient{
   val codec = ProtobufCodec(TestagleProtocol.getDefaultInstance)

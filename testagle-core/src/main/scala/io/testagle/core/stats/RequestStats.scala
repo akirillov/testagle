@@ -14,7 +14,7 @@ object TotalStats{
 
   def apply(stats: Seq[RequestStats]): TotalStats = {
 
-
+     //TODO: implement stats here (percentile, mean etc)
 
      TotalStats(0,0,0,0f,0f,0f,0f)      //TODO: implement with list comprehension
   }
