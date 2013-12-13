@@ -10,7 +10,7 @@ class ServerAPIImplTest extends Specification{
   "Server API Implementation" should {
     "upload test and generate UUID" in {
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest")
+      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest", 10)
 
       val testID = new TestagleAPIServerImplementation().loadTest(msg)
 
@@ -19,7 +19,7 @@ class ServerAPIImplTest extends Specification{
     }
     "remove test by UUID" in {
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest")
+      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest", 10)
 
       val server = new TestagleAPIServerImplementation()
 
@@ -33,7 +33,7 @@ class ServerAPIImplTest extends Specification{
   "Server API Implementation" should {
     "run specified test at specified concurrency" in {
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest")
+      val msg = LoadDescription("127.0.0.1", 4, 10000, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest", 10000)
 
       val server = new TestagleAPIServerImplementation()
 

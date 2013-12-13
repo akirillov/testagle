@@ -7,6 +7,11 @@ import io.testagle.api.LoadTest
  */
 class TestagleTest extends LoadTest{
   def execute(){
-    Thread.sleep(1000)
+    def factorial(n: BigInt): BigInt = n match {
+      case x if x < 1 => 1
+      case x => x * factorial(n-1)
+    }
+
+    factorial(6000)
   }
 }
