@@ -33,7 +33,7 @@ class ServerAPIImplTest extends Specification{
   "Server API Implementation" should {
     "run specified test at specified concurrency" in {
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 4, 10000, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest", 10000)
+      val msg = LoadDescription("127.0.0.1", 4, 1000, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest", 100)
 
       val server = new TestagleAPIServerImplementation()
 
@@ -41,16 +41,10 @@ class ServerAPIImplTest extends Specification{
 
       val testResult = server.runTest(testID)
 
-      println(testResult)
-
-
-      testID must_!= null
-      testID.length must_!= 0
+      testResult must_!= null
 
       server.unloadTest(testID) mustEqual testID
       server.unloadTest(testID) mustEqual null
-
-
     }
   }
 }
