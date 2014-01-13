@@ -10,7 +10,7 @@ trait TestagleAPI {
 
   def loadTest(container: LoadDescription): String
 
-  def unloadTest(testId: String): String
+  def unloadTest(testId: String): Boolean
 
   def runTest(testId: String): TotalStats
 }

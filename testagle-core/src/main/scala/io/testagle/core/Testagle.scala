@@ -37,7 +37,13 @@ class Testagle extends Service[TestagleProtocol, TestagleProtocol] {
       case p: TestagleProtocol =>
         p.`type` match {
           case LOAD_DESCRIPTION => Future.value(TestagleProtocol(OK, None, None, None, None, Some(Ok(core.loadTest(p.`loadDescription`.get)))))
-          case UNLOAD_COMMAND => Future.value(TestagleProtocol(OK, None, None, None, None, Some(Ok(core.unloadTest(p.`unload`.get.`testID`)))))
+
+          case UNLOAD_COMMAND => if(core.unloadTest(p.`unload`.get.`testID`)) {
+            Future.value(TestagleProtocol(OK, None, None, None, None, Some(Ok(p.`unload`.get.`testID`))))
+          } else {
+            Future.value(TestagleProtocol(ERROR, None, None, None, None, None, Some(Error("No tests with specified ID found!"))))
+          }
+
           case RUNTEST_COMMAND => Future.value(TestagleProtocol(LOAD_STATS, None, Some(core.runTest(p.`runTest`.get.`testID`)), None, None, None))
           case _ => Future.value(TestagleProtocol(ERROR, None, None, None, None, None, Some(Error("Unappropriate message provided!"))))
         }

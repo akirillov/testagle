@@ -14,8 +14,9 @@ class TestagleRPCSpec extends Specification {
   "Testagle client-server RPC" should {
     "properly dispatch upload test request and UUID generation" in {
 
-      val server = TestagleServer(8383, "test node")
-      val client = TestagleClient(List(new InetSocketAddress("127.0.0.1", 8383)))
+      val port = 8300
+      val server = TestagleServer(port, "test node")
+      val client = TestagleClient(List(new InetSocketAddress("127.0.0.1", port)))
 
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
 
@@ -28,8 +29,6 @@ class TestagleRPCSpec extends Specification {
       client.close()
       server.close()
 
-      while server
-
       response.`ok` mustNotEqual None
 
       val testID = response.`ok`.get.`testID`
@@ -40,8 +39,9 @@ class TestagleRPCSpec extends Specification {
 
     "properly dispatch unload request by ID" in {
 
-      val server = TestagleServer(8383, "test node")
-      val client = TestagleClient(List(new InetSocketAddress("127.0.0.1", 8383)))
+      val port = 8301
+      val server = TestagleServer(port, "test node")
+      val client = TestagleClient(List(new InetSocketAddress("127.0.0.1", port)))
 
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
 
@@ -62,9 +62,11 @@ class TestagleRPCSpec extends Specification {
       unloadResponse.`ok`.get.`testID` mustEqual testID
     }
 
-    "generate error in case of UUID abscense" in {
-      val server = TestagleServer(8383, "test node")
-      val client = TestagleClient(List(new InetSocketAddress("127.0.0.1", 8383)))
+    "generate error in case of UUID absence" in {
+
+      val port = 8302
+      val server = TestagleServer(port, "test node")
+      val client = TestagleClient(List(new InetSocketAddress("127.0.0.1", port)))
 
       val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
 
@@ -91,50 +93,4 @@ class TestagleRPCSpec extends Specification {
       unloadError.`error`.get.`text` mustNotEqual ""
     }
   }
-
-
-  /*
-
-   "Server API Implementation" should {
-    "upload test and generate UUID" in {
-      val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest", 10)
-
-      val testID = new TestagleAPIServerImplementation().loadTest(msg)
-
-      testID must_!= null
-      testID.length must_!= 0
-    }
-    "remove test by UUID" in {
-      val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 5, 40, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest", 10)
-
-      val server = new TestagleAPIServerImplementation()
-
-      val testID = server.loadTest(msg)
-
-      server.unloadTest(testID) mustEqual testID
-      server.unloadTest(testID) mustEqual null
-    }
-  }
-
-  "Server API Implementation" should {
-    "run specified test at specified concurrency" in {
-      val byteArray = readBytesFromClasspathResource("/testagle-example.jar")
-      val msg = LoadDescription("127.0.0.1", 4, 1000, ByteString.copyFrom(byteArray), "io.testagle.example.TestagleTest", 100)
-
-      val server = new TestagleAPIServerImplementation()
-
-      val testID = server.loadTest(msg)
-
-      val testResult = server.runTest(testID)
-
-      testResult must_!= null
-
-      server.unloadTest(testID) mustEqual testID
-      server.unloadTest(testID) mustEqual null
-    }
-  }
-
-  */
 }

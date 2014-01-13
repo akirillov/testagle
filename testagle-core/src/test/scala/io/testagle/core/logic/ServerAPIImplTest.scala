@@ -25,8 +25,8 @@ class ServerAPIImplTest extends Specification{
 
       val testID = server.loadTest(msg)
 
-      server.unloadTest(testID) mustEqual testID
-      server.unloadTest(testID) mustEqual null
+      server.unloadTest(testID) mustEqual true
+      server.unloadTest(testID) mustEqual false
     }
   }
 
@@ -43,8 +43,8 @@ class ServerAPIImplTest extends Specification{
 
       testResult must_!= null
 
-      server.unloadTest(testID) mustEqual testID
-      server.unloadTest(testID) mustEqual null
+      server.unloadTest(testID) mustEqual true
+      server.unloadTest(testID) mustEqual false
     }
   }
 }

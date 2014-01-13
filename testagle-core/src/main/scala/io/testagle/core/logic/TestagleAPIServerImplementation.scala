@@ -55,8 +55,8 @@ class TestagleAPIServerImplementation extends TestagleAPI{
 
   def unloadTest(testId: String) = {
     tests.remove(testId) match {
-      case descriptor: LoadDescriptor => testId
-      case null => null
+      case descriptor: LoadDescriptor => true
+      case _ => false
     }
   }
 }
